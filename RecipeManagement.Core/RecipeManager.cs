@@ -16,15 +16,18 @@ public sealed class RecipeManager : IRecipeManager
     LinkedList<int> cookingPlan = new LinkedList<int>();
     Stack<int> removedRecipes = new Stack<int>();
     Queue<string> pendingInstructions = new Queue<string>();
-    
+
 
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
         // TODO Part A: validate recipes and build Dictionary<int, Recipe>.
-        _ = recipes;
+        foreach (Recipe recipe in recipes)
+        {
+            catalogue.Add(recipe.Id, recipe);
+        }
     }
 
-    public int RecipeCount => 0;
+    public int RecipeCount => catalogue.Count;
     public int ShoppingItemCount => 0;
     public int CookingPlanCount => 0;
     public int PendingInstructionCount => 0;
