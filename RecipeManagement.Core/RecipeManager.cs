@@ -50,19 +50,29 @@ public sealed class RecipeManager : IRecipeManager
     }
 
     public int RecipeCount => catalogue.Count;
-    public int ShoppingItemCount => 0;
-    public int CookingPlanCount => 0;
-    public int PendingInstructionCount => 0;
-    public int RemovedRecipeCount => 0;
+    public int ShoppingItemCount => shoppingList.Count;
+    public int CookingPlanCount => cookingPlan.Count;
+    public int PendingInstructionCount => pendingInstructions.Count;
+    public int RemovedRecipeCount => removedRecipes.Count;
 
-    public bool AddRecipe(Recipe recipe) =>
-        throw new NotImplementedException("Part A: implement AddRecipe.");
+    public bool AddRecipe(Recipe recipe)
+    {
+        catalogue.Add(recipe.Id, recipe);
+        return true;
+    }
 
-    public Recipe? FindRecipe(int recipeId) =>
-        throw new NotImplementedException("Part A: implement FindRecipe.");
+    public Recipe? FindRecipe(int recipeId)
+    {
+        Recipe? found = null;
+        catalogue.TryGetValue(recipeId, out found);
+        return found;
+    }
 
-    public bool RemoveRecipe(int recipeId) =>
-        throw new NotImplementedException("Part A: implement RemoveRecipe.");
+    public bool RemoveRecipe(int recipeId)
+    {
+        bool removed = catalogue.Remove(recipeId);
+        return removed;
+    }
 
     public int AddIngredientsToShoppingList(int recipeId) =>
         throw new NotImplementedException("Part A: implement AddIngredientsToShoppingList.");
