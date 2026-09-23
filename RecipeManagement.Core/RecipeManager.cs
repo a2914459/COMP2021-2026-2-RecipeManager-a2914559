@@ -21,8 +21,30 @@ public sealed class RecipeManager : IRecipeManager
     public RecipeManager(IEnumerable<Recipe> recipes)
     {
         // TODO Part A: validate recipes and build Dictionary<int, Recipe>.
+
+        if (recipes == null)
+        {
+            throw new ArgumentNullException(nameof(recipes));
+        }
         foreach (Recipe recipe in recipes)
         {
+            if (recipe == null)
+            {
+                throw new ArgumentException("Recipe is empty.");
+            }
+            if (recipe.Id <=0)
+            {
+                throw new ArgumentException("Recipe ID should be over 1");
+            }
+            if (string.IsNullOrWhiteSpace(recipe.Title))
+            {
+                throw new ArgumentException("Recipe Title is empty.");
+            }
+            bool alreadyExist = catalogue.ContainsKey(recipe.Id);
+            if (alreadyExist)
+            {
+                throw new ArgumentException("Recipe with the same ID already exist.");
+            }
             catalogue.Add(recipe.Id, recipe);
         }
     }
