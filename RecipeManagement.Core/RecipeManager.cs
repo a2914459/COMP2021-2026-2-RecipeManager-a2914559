@@ -57,6 +57,23 @@ public sealed class RecipeManager : IRecipeManager
 
     public bool AddRecipe(Recipe recipe)
     {
+        if (recipe == null)
+        {
+            throw new ArgumentNullException(nameof(recipe));
+        }
+        if (recipe.Id <= 0)
+        {
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(recipe.Title))
+        {
+            return false;
+        }
+        bool alreadyExist = catalogue.ContainsKey(recipe.Id);
+        if (alreadyExist)
+        {
+            return false;
+        }
         catalogue.Add(recipe.Id, recipe);
         return true;
     }
