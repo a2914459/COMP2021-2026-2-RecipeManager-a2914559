@@ -32,7 +32,7 @@ public sealed class RecipeManager : IRecipeManager
             {
                 throw new ArgumentException("Recipe is empty.");
             }
-            if (recipe.Id <=0)
+            if (recipe.Id <= 0)
             {
                 throw new ArgumentException("Recipe ID should be over 1");
             }
@@ -101,7 +101,7 @@ public sealed class RecipeManager : IRecipeManager
 
         int count = 0;
 
-        foreach(string ingredient in recipe.Ingredients)
+        foreach (string ingredient in recipe.Ingredients)
         {
             shoppingList.Add(ingredient);
             count += 1;
@@ -113,8 +113,21 @@ public sealed class RecipeManager : IRecipeManager
     public IReadOnlyList<string> GetShoppingList() => new List<string>(shoppingList);
     public void ClearShoppingList() => shoppingList.Clear();
 
-    public bool AddRecipeToCookingPlan(int recipeId) =>
-        throw new NotImplementedException("Part A: implement AddRecipeToCookingPlan.");
+    public bool AddRecipeToCookingPlan(int recipeId)
+    {
+        Recipe? recipe = FindRecipe(recipeId);
+        if (recipe == null)
+        {
+            return false;
+        }
+        bool alreadyInPlan = cookingPlan.Contains(recipeId);
+        if (alreadyInPlan)
+        {
+            return false;
+        }
+        cookingPlan.AddLast(recipeId);
+        return true;
+    }
 
     public bool RemoveRecipeFromCookingPlan(int recipeId) =>
         throw new NotImplementedException("Part A: implement RemoveRecipeFromCookingPlan.");
