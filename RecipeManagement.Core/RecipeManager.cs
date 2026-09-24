@@ -87,6 +87,11 @@ public sealed class RecipeManager : IRecipeManager
 
     public bool RemoveRecipe(int recipeId)
     {
+        bool inCookingPlan = cookingPlan.Contains(recipeId);
+        if (inCookingPlan)
+        {
+            return false;
+        }
         bool removed = catalogue.Remove(recipeId);
         return removed;
     }
@@ -141,8 +146,31 @@ public sealed class RecipeManager : IRecipeManager
         return true;
     }
 
-    public bool RestoreLastRemovedRecipe() =>
-        throw new NotImplementedException("Part A: implement RestoreLastRemovedRecipe.");
+    public bool RestoreLastRemovedRecipe()
+    {
+        if (removedRecipes.Count == 0)
+        {
+            return false;
+        }
+
+        int recipeId = removedRecipes.Pop();
+
+        Recipe? recipe = FindRecipe(recipeId);
+
+        if (recipe == null)
+        {
+            return false;
+        }
+
+        bool alreadyInPlan = cookingPlan.Contains(recipeId);
+        if (alreadyInPlan)
+        {
+            return false;
+        }
+
+        cookingPlan.AddLast(recipeId);
+        return true;
+    }
 
     public int? PeekLastRemovedRecipe()
     {
