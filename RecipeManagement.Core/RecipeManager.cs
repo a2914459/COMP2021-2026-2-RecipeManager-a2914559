@@ -129,8 +129,17 @@ public sealed class RecipeManager : IRecipeManager
         return true;
     }
 
-    public bool RemoveRecipeFromCookingPlan(int recipeId) =>
-        throw new NotImplementedException("Part A: implement RemoveRecipeFromCookingPlan.");
+    public bool RemoveRecipeFromCookingPlan(int recipeId)
+    {
+        bool removed = cookingPlan.Remove(recipeId);
+        if (removed == false)
+        {
+            return false;
+        }
+
+        removedRecipes.Push(recipeId);
+        return true;
+    }
 
     public bool RestoreLastRemovedRecipe() =>
         throw new NotImplementedException("Part A: implement RestoreLastRemovedRecipe.");
