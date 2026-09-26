@@ -81,4 +81,32 @@ public sealed class RecipeManagerTests
         Assert.False(result);
         Assert.Equal(2, manager.RecipeCount);
     }
+
+    [Fact]
+    public void FindRecipe_MissingId()
+    {
+        var manager = CreateManager();
+        Recipe? found = manager.FindRecipe(999);
+        Assert.Null(found);
+    }
+
+    [Fact]
+    public void RemoveRecipe_ReturnsTrue()
+    {
+        var manager = CreateManager();
+
+        bool result = manager.RemoveRecipe(10);
+
+        Assert.True(result);
+        Assert.Null(manager.FindRecipe(10));
+        Assert.Equal(1, manager.RecipeCount);
+    }
+
+    [Fact]
+    public void RemoveRecipe_ReturnsFalse()
+    {
+        var manager = CreateManager();
+        bool result = manager.RemoveRecipe(999);
+        Assert.False(result);
+    }
 }
