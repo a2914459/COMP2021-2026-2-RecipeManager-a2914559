@@ -146,4 +146,64 @@ public sealed class RecipeManagerTests
 
         Assert.Equal(0, manager.ShoppingItemCount);
     }
+
+    [Fact]
+    public void AddRecipeToCookingPlan_AddsRecipesInOrder()
+    {
+        var manager = CreateManager();
+
+        manager.AddRecipeToCookingPlan(10);
+        manager.AddRecipeToCookingPlan(20);
+
+        Assert.Equal(new[] {10, 20}, manager.GetCookingPlan());
+    }
+
+    [Fact]
+    public void AddRecipeToCookingPlan_MissingRecipe()
+    {
+        var manager = CreateManager();
+
+        bool result = manager.AddRecipeToCookingPlan(999);
+
+        Assert.False(result);
+        Assert.Equal(0, manager.CookingPlanCount);
+    }
+
+    [Fact]
+    public void AddRecipeToCookingPlan_ReturnFalse()
+    {
+        var manager = CreateManager();
+
+        manager.AddRecipeToCookingPlan(10);
+        bool result = manager.AddRecipeToCookingPlan(10);
+
+        Assert.False(result);
+        Assert.Equal(1, manager.CookingPlanCount);
+    }
+
+    [Fact]
+    public void RemoveRecipeFromCookingPlan_ReturnTrue()
+    {
+        var manager = CreateManager();
+
+        manager.AddRecipeToCookingPlan(10);
+
+        bool result = manager.RemoveRecipeFromCookingPlan(10);
+
+        Assert.True(result);
+        Assert.Equal(0, manager.CookingPlanCount);
+    }
+
+    [Fact]
+    public void RemoveRecipeFromCookingPlan_ReturnFalse()
+    {
+        var manager = CreateManager();
+
+        bool result = manager.RemoveRecipeFromCookingPlan(10);
+
+        Assert.False(result);
+        Assert.Equal(0, manager.RemovedRecipeCount);
+    }
+
+
 }
