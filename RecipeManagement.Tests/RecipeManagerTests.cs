@@ -63,7 +63,7 @@ public sealed class RecipeManagerTests
     public void AddRecipe_ReturnsTrue()
     {
         var manager = CreateManager();
-        var newRecipe = new Recipe {Id = 100, Title = "Test Recipe"};
+        var newRecipe = new Recipe { Id = 100, Title = "Test Recipe" };
 
         bool result = manager.AddRecipe(newRecipe);
 
@@ -75,7 +75,7 @@ public sealed class RecipeManagerTests
     public void AddRecipe_ReturnsFalse()
     {
         var manager = CreateManager();
-        var duplicateRecipe = new Recipe {Id = 10, Title = "duplicate"};
+        var duplicateRecipe = new Recipe { Id = 10, Title = "duplicate" };
 
         bool result = manager.AddRecipe(duplicateRecipe);
 
@@ -116,8 +116,8 @@ public sealed class RecipeManagerTests
     {
         var manager = CreateManager();
         int addedCount = manager.AddIngredientsToShoppingList(10);
-        Assert.Equal (1, addedCount);
-        Assert.Equal(new[] {"1 apple"}, manager.GetShoppingList());
+        Assert.Equal(1, addedCount);
+        Assert.Equal(new[] { "1 apple" }, manager.GetShoppingList());
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public sealed class RecipeManagerTests
         manager.AddRecipeToCookingPlan(10);
         manager.AddRecipeToCookingPlan(20);
 
-        Assert.Equal(new[] {10, 20}, manager.GetCookingPlan());
+        Assert.Equal(new[] { 10, 20 }, manager.GetCookingPlan());
     }
 
     [Fact]
@@ -236,8 +236,64 @@ public sealed class RecipeManagerTests
         bool restored = manager.RestoreLastRemovedRecipe();
 
         Assert.True(restored);
-        Assert.Equal(new[] {20}, manager.GetCookingPlan());
+        Assert.Equal(new[] { 20 }, manager.GetCookingPlan());
         Assert.Equal(10, manager.PeekLastRemovedRecipe());
+    }
+
+
+    [Fact]
+    public void StartCooking_MissingRecipe()
+    {
+        var manager = CreateManager();
+
+        bool result = manager.StartCooking(999);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void StartCooking_NoInstructions()
+    {
+        var manager = CreateManager();
+
+        bool result = manager.StartCooking(20);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void StartCooking_ReturnsTrue()
+    {
+        var manager = CreateManager();
+
+        bool result = manager.StartCooking(10);
+
+        Assert.True(result);
+        Assert.Equal(2, manager.PendingInstructionCount);
+        Assert.Equal("First step", manager.PeekNextInstruction());
+    }
+
+    [Fact]
+    public void CompleteNextInstruction_ProcessesInFIFO()
+    {
+        var manager = CreateManager();
+        manager.StartCooking(10);
+
+        string? first = manager.CompleteNextInstruction();
+        string? second = manager.CompleteNextInstruction();
+
+        Assert.Equal("First step", first);
+        Assert.Equal("Second step", second);
+        Assert.Equal(0, manager.PendingInstructionCount);
+    }
+
+    [Fact]
+    public void PeekAndCompleteNextInstruction_ReturnNull()
+    {
+        var manager = CreateManager();
+
+        Assert.Null(manager.PeekNextInstruction());
+        Assert.Null(manager.CompleteNextInstruction());
     }
 
 
