@@ -205,5 +205,40 @@ public sealed class RecipeManagerTests
         Assert.Equal(0, manager.RemovedRecipeCount);
     }
 
+    [Fact]
+    public void PeekLastRemovedRecipe_ReturnsNull()
+    {
+        var manager = CreateManager();
+        int? result = manager.PeekLastRemovedRecipe();
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void RestoreLastRemovedRecipe_ReturnsFalse()
+    {
+        var manager = CreateManager();
+        bool result = manager.RestoreLastRemovedRecipe();
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void RemovedRecipies_RestoreInLIFO()
+    {
+        var manager = CreateManager();
+        manager.AddRecipeToCookingPlan(10);
+        manager.AddRecipeToCookingPlan(20);
+
+        manager.RemoveRecipeFromCookingPlan(10);
+        manager.RemoveRecipeFromCookingPlan(20);
+
+        Assert.Equal(20, manager.PeekLastRemovedRecipe());
+
+        bool restored = manager.RestoreLastRemovedRecipe();
+
+        Assert.True(restored);
+        Assert.Equal(new[] {20}, manager.GetCookingPlan());
+        Assert.Equal(10, manager.PeekLastRemovedRecipe());
+    }
+
 
 }
