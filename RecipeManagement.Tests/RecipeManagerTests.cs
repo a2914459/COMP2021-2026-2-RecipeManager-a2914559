@@ -296,5 +296,41 @@ public sealed class RecipeManagerTests
         Assert.Null(manager.CompleteNextInstruction());
     }
 
+    [Fact]
+    public void FullWorkflow()
+    {
+        var manager = CreateManager();
+
+        // 1. find recipe in catalogue
+        Recipe? recipe = manager.FindRecipe(10);
+        Assert.NotNull(recipe);
+
+        // 2. add ingredients of that recipe into shopping list
+        int addedIngredients = manager.AddIngredientsToShoppingList(10);
+        Assert.Equal(1, addedIngredients);
+        Assert.Equal(1, manager.ShoppingItemCount);
+
+        // 3. add to cooking plan
+        bool addedToPlan = manager.AddRecipeToCookingPlan(10);
+        Assert.True(addedToPlan);
+        Assert.Equal(1, manager.CookingPlanCount);
+
+        // 4. remove from cooking plan and restore
+        manager.RemoveRecipeFromCookingPlan(10);
+        Assert.Equal(0, manager.CookingPlanCount);
+        Assert.Equal(1, manager.RemovedRecipeCount);
+
+        bool restored = manager.RestoreLastRemovedRecipe();
+        Assert.True(restored);
+        Assert.Equal(1, manager.CookingPlanCount);
+
+        // 5. start cooking
+        bool started = manager.StartCooking(10);
+        Assert.True(started);
+        Assert.Equal(2, manager.PendingInstructionCount);
+
+        string? step1 = manager.CompleteNextInstruction();
+        Assert.Equal("First step", step1);
+    }
 
 }
