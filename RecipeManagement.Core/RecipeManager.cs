@@ -200,7 +200,7 @@ public sealed class RecipeManager : IRecipeManager
 
         pendingInstructions.Clear();
 
-        foreach(string instruction in recipe.Instructions)
+        foreach (string instruction in recipe.Instructions)
         {
             pendingInstructions.Enqueue(instruction);
         }
@@ -228,8 +228,25 @@ public sealed class RecipeManager : IRecipeManager
         return pendingInstructions.Dequeue();
     }
 
-    public IReadOnlyList<Recipe> SearchByTitle(string searchText) =>
-        throw new NotImplementedException("Part B: implement SearchByTitle.");
+    // Part B
+
+    public IReadOnlyList<Recipe> SearchByTitle(string searchText)
+    {
+
+        if (searchText != "")
+        {
+            var matches = catalogue.Values.Where(x => x.Title.ToLower().Contains(searchText.ToLower())).ToList();
+
+            List<Recipe> result = new List<Recipe>();
+            foreach (var m in matches)
+            {
+                result.Add(m);
+            }
+
+            return result;
+        }
+        return catalogue.Values.ToList();
+    }
 
     public IReadOnlyList<Recipe> SearchByIngredient(string searchText) =>
         throw new NotImplementedException("Part B: implement SearchByIngredient.");
