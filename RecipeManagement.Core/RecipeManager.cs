@@ -248,8 +248,20 @@ public sealed class RecipeManager : IRecipeManager
         return catalogue.Values.ToList();
     }
 
-    public IReadOnlyList<Recipe> SearchByIngredient(string searchText) =>
-        throw new NotImplementedException("Part B: implement SearchByIngredient.");
+    public IReadOnlyList<Recipe> SearchByIngredient(string searchText)
+    {
+        if (searchText != "")
+        {
+            var matches = catalogue.Values.Where(x => x.Ingredients.Any(y => y.ToLower().Contains(searchText.ToLower())));
+            List<Recipe> result = new List<Recipe>();
+            foreach (var m in matches)
+            {
+                result.Add(m);
+            }
+            return result;
+        }
+        return catalogue.Values.ToList();
+    }
 
     public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count) =>
         throw new NotImplementedException("Part B: implement GetHighestProteinRecipes.");
