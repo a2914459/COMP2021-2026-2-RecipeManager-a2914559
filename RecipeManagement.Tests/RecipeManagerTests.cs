@@ -360,4 +360,22 @@ public sealed class RecipeManagerTests
         Assert.Equal(10, results[0].Id);
     }
 
+    [Fact]
+    public void HighestProteinWorks()
+    {
+        var recipes = new List<Recipe>
+    {
+        new Recipe { Id = 1, Title = "High protein", Nutrition = new NutritionInfo { ProteinG = 40 } },
+        new Recipe { Id = 2, Title = "Low protein", Nutrition = new NutritionInfo { ProteinG = 10 } },
+        new Recipe { Id = 3, Title = "No protein data" }
+    };
+        var manager = new RecipeManager(recipes);
+
+        var results = manager.GetHighestProteinRecipes(2);
+
+        Assert.Equal(2, results.Count);
+        Assert.Equal(1, results[0].Id);
+        Assert.Equal(2, results[1].Id);
+    }
+
 }
