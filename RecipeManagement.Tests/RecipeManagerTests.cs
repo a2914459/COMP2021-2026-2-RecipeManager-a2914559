@@ -333,4 +333,31 @@ public sealed class RecipeManagerTests
         Assert.Equal("First step", step1);
     }
 
+
+
+
+    //partB
+
+    [Fact]
+    public void SearchByTitle_ReturnsTrue()
+    {
+        var manager = CreateManager();
+
+        var results = manager.SearchByTitle("recipe a");
+
+        Assert.Single(results);
+        Assert.Equal(10, results[0].Id);
+    }
+
+    [Fact]
+    public void SearchByIngredient_ReturnsTrue()
+    {
+        var manager = CreateManager();
+
+        var results = manager.SearchByIngredient("APPLE");
+
+        Assert.Single(results);
+        Assert.Equal(10, results[0].Id);
+    }
+
 }
